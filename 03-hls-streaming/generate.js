@@ -1,12 +1,17 @@
 const fs = require("fs");
 const path = require("path");
+const { createHash } = require("crypto");
 const { spawnSync } = require("child_process");
 
 const dir = path.join(__dirname, "videos");
+const sourceVideo = path.join(__dirname, "sample.mp4");
 fs.mkdirSync(dir, { recursive: true });
-const VIDEO_DURATION = 24;
-const generationVersion = "2";
+const generationVersion = "3";
 const versionFile = path.join(dir, "generation-version.txt");
+const sourceHash = createHash("sha256")
+  .update(fs.readFileSync(sourceVideo))
+  .digest("hex");
+const generationSignature = `${generationVersion}:${sourceHash}`;
 
 // Cada variante representa uma resolução e um bitrate anunciados no master.m3u8.
 const variants = [
@@ -33,31 +38,29 @@ const variants = [
   },
 ];
 
-// A geração acontece na primeira inicialização ou quando o exemplo muda de
-// versão. Assim, um volume antigo com o vídeo de 8 s é atualizado sozinho.
+// A geração acontece na primeira inicialização, quando o comando muda ou
+// quando sample.mp4 é substituído por outro arquivo.
+// O MP4 original é versionado; as playlists e os segmentos são derivados dele.
 if (
   !fs.existsSync(versionFile) ||
-  fs.readFileSync(versionFile, "utf8") !== generationVersion
+  fs.readFileSync(versionFile, "utf8") !== generationSignature
 ) {
   for (const item of variants) {
     const output = path.join(dir, item.name);
     fs.mkdirSync(output, { recursive: true });
     console.log(`Gerando vídeo de exemplo ${item.name}...`);
 
-    // testsrc2 gera a imagem; sine gera o áudio. O FFmpeg cria a playlist
-    // da variante e segmentos MPEG-TS de aproximadamente dois segundos.
+    // Cada variante vem do mesmo MP4, reduzido para a resolução desejada.
+    // O FFmpeg cria uma playlist e segmentos MPEG-TS de cerca de dois segundos.
     const args = [
       "-hide_banner",
       "-loglevel",
       "error",
-      "-f",
-      "lavfi",
+      "-y",
       "-i",
-      `testsrc2=size=${item.width}x${item.height}:rate=24:duration=${VIDEO_DURATION}`,
-      "-f",
-      "lavfi",
-      "-i",
-      `sine=frequency=440:sample_rate=44100:duration=${VIDEO_DURATION}`,
+      sourceVideo,
+      "-vf",
+      `scale=${item.width}:${item.height}`,
       "-c:v",
       "libx264",
       "-preset",
@@ -102,5 +105,5 @@ if (
         )
         .join(""),
   );
-  fs.writeFileSync(versionFile, generationVersion);
+  fs.writeFileSync(versionFile, generationSignature);
 }

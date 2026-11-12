@@ -144,7 +144,7 @@ Arquivos: [app.js](02-sse-monitoramento/public/app.js) do painel e [publicar.js]
 
 ### Ideia
 
-No primeiro início, o FFmpeg gera um vídeo sintético de 24 segundos em 360p, 720p e 1080p. Ele cria uma playlist mestre, uma playlist por qualidade e pequenos segmentos `.ts`. O navegador baixa esses arquivos por requisições HTTP. O player repete a amostra em loop para facilitar a demonstração. Isso é diferente da conexão persistente usada em WebSocket e SSE.
+O repositório inclui um único vídeo de origem, `sample.mp4`, com 24 segundos e resolução 1080p. Ao iniciar o serviço, o FFmpeg cria a partir dele versões HLS em 360p, 720p e 1080p: uma playlist mestre, uma playlist por qualidade e pequenos segmentos `.ts`. Esses arquivos derivados ficam fora do Git. O navegador os baixa por requisições HTTP. O player repete a amostra em loop para facilitar a demonstração. Isso é diferente da conexão persistente usada em WebSocket e SSE.
 
 ```text
 FFmpeg ─> master.m3u8 ─┬─> 360p/index.m3u8 ─> segment_000.ts, ...
@@ -170,7 +170,8 @@ Arquivos: [generate.js](03-hls-streaming/generate.js) e [server.js](03-hls-strea
 | `fs.existsSync("master.m3u8")` | Evita gerar novamente o vídeo em cada início. |
 | `fs.mkdirSync(..., { recursive: true })` | Cria a pasta de cada variante. |
 | `spawnSync("ffmpeg", args)` | Executa o FFmpeg e espera a geração terminar. |
-| `testsrc2` e `sine` | Geram imagem e som sintéticos, sem arquivo externo. |
+| `sample.mp4` | Vídeo de origem versionado; pode ser substituído por outro MP4. |
+| `-vf scale=...` | Redimensiona a origem para cada uma das três variantes. |
 | `-c:v libx264` e `-c:a aac` | Codificam vídeo e áudio em formatos usados pelo player. |
 | `-hls_time 2` | Solicita segmentos de aproximadamente dois segundos. |
 | `-hls_playlist_type vod` | Produz playlists de vídeo sob demanda, com duração conhecida. |

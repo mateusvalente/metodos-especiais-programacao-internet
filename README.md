@@ -12,9 +12,19 @@ Requisitos: Docker e Docker Compose. Na raiz do projeto:
 docker compose up --build
 ```
 
-Abra [chat](http://localhost:3001), [monitoramento SSE](http://localhost:3002), [publicador de notificações](http://localhost:3002/publicar.html) e [player HLS](http://localhost:3003). O Compose monta o código local em `/app` por volumes; os Dockerfiles não copiam o projeto. Dependências ficam em volumes nomeados. O primeiro início do HLS gera um vídeo de teste com FFmpeg nas resoluções 360p, 720p e 1080p e salva os segmentos em `03-hls-streaming/videos/` (ignorado pelo Git).
+Abra [chat](http://localhost:3001), [monitoramento SSE](http://localhost:3002), [publicador de notificações](http://localhost:3002/publicar.html) e [player HLS](http://localhost:3003). O Compose monta o código local em `/app` por volumes; os Dockerfiles não copiam o projeto. Dependências ficam em volumes nomeados. O repositório inclui **um único vídeo de origem**, `03-hls-streaming/sample.mp4`. Ao iniciar, o FFmpeg gera a partir dele playlists e segmentos HLS em 360p, 720p e 1080p na pasta `videos/`.
 
-Para encerrar: `docker compose down`. Para gerar o vídeo novamente, remova a pasta `03-hls-streaming/videos` e reinicie o serviço.
+Para encerrar: `docker compose down`. A pasta `03-hls-streaming/videos/` contém apenas arquivos gerados e fica fora do Git.
+
+### Gerar ou trocar o vídeo HLS
+
+O arquivo [sample.mp4](03-hls-streaming/sample.mp4) é a fonte das três qualidades. Para criar outra amostra sintética de 24 segundos com o FFmpeg do contêiner:
+
+```sh
+docker compose exec streaming ffmpeg -y -f lavfi -i testsrc2=size=1920x1080:rate=24:duration=24 -f lavfi -i sine=frequency=440:sample_rate=44100:duration=24 -c:v libx264 -preset ultrafast -pix_fmt yuv420p -b:v 900k -c:a aac -b:a 64k -movflags +faststart /app/sample.mp4
+```
+
+Você também pode substituir `03-hls-streaming/sample.mp4` por seu próprio MP4 e reiniciar o serviço com `docker compose restart streaming`. O script [generate.js](03-hls-streaming/generate.js) detecta a mudança no arquivo, executa o FFmpeg três vezes, uma por resolução, e grava as playlists `.m3u8` e segmentos `.ts`. O vídeo de origem deve ter resolução pelo menos 1920×1080 para manter detalhes reais na variante 1080p.
 
 ## Testes de navegador
 
