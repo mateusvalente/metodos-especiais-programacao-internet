@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Guia visual • Laboratório de Comunicação Web</title>
+    <link rel="stylesheet" href="/shared/style.css" />
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      .hero {
+        padding: 24px 0 12px;
+      }
+      .hero h1 {
+        max-width: 760px;
+      }
+      .guide-nav {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 20px 0 34px;
+      }
+      .guide-nav a,
+      .action-link {
+        display: inline-block;
+        padding: 10px 14px;
+        border: 1px solid #3b5671;
+        border-radius: 8px;
+        background: #102b39;
+        color: #d9f8ee;
+      }
+      .chapter {
+        margin: 0 0 42px;
+        scroll-margin-top: 24px;
+      }
+      .chapter-head {
+        margin-bottom: 18px;
+      }
+      .chapter-head h2 {
+        font-size: clamp(27px, 4vw, 36px);
+        margin: 10px 0;
+      }
+      .diagram {
+        background: #0b192b;
+        border: 1px solid #304a65;
+        border-radius: 14px;
+        padding: 14px;
+        margin: 18px 0;
+        overflow-x: auto;
+      }
+      .diagram svg {
+        display: block;
+        width: 100%;
+        min-width: 620px;
+        height: auto;
+      }
+      .diagram .box {
+        fill: #17334a;
+        stroke: #51cfa9;
+        stroke-width: 2;
+      }
+      .diagram .broker {
+        fill: #47345b;
+        stroke: #be95ec;
+        stroke-width: 2;
+      }
+      .diagram .text {
+        fill: #eff8ff;
+        font:
+          700 15px ui-sans-serif,
+          system-ui,
+          sans-serif;
+        text-anchor: middle;
+      }
+      .diagram .sub {
+        fill: #a9bdd3;
+        font:
+          13px ui-sans-serif,
+          system-ui,
+          sans-serif;
+        text-anchor: middle;
+      }
+      .diagram .line {
+        stroke: #78dec4;
+        stroke-width: 2.5;
+        fill: none;
+        marker-end: url(#arrow);
+      }
+      .diagram .purple {
+        stroke: #c399eb;
+      }
+      .diagram .label {
+        fill: #8deed1;
+        font:
+          13px ui-sans-serif,
+          system-ui,
+          sans-serif;
+        text-anchor: middle;
+      }
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .method-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      .method-table th,
+      .method-table td {
+        text-align: left;
+        vertical-align: top;
+        border-bottom: 1px solid #304a65;
+        padding: 10px 8px;
+      }
+      .method-table th {
+        color: #77e5c5;
+      }
+      .method-table code,
+      code {
+        color: #91efd1;
+        overflow-wrap: anywhere;
+      }
+      .method-table td:first-child {
+        width: 42%;
+      }
+      .tag {
+        display: inline-block;
+        padding: 4px 9px;
+        background: #244b57;
+        border-radius: 99px;
+        color: #93f2d7;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .steps {
+        counter-reset: item;
+        list-style: none;
+        padding: 0;
+        display: grid;
+        gap: 10px;
+      }
+      .steps li {
+        counter-increment: item;
+        padding: 11px 14px 11px 48px;
+        position: relative;
+        background: #0b192b;
+        border-radius: 9px;
+        border: 1px solid #304a65;
+      }
+      .steps li::before {
+        content: counter(item);
+        position: absolute;
+        left: 13px;
+        top: 10px;
+        width: 24px;
+        height: 24px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: #50d4ad;
+        color: #09251e;
+        font-weight: 800;
+      }
+      .callout {
+        background: #193246;
+        border-left: 4px solid #be95ec;
+        padding: 14px 18px;
+        border-radius: 0 10px 10px 0;
+        margin: 18px 0;
+      }
+      .callout p {
+        margin: 0;
+      }
+      .legend {
+        font-size: 13px;
+        color: #9eb4ce;
+        margin: 8px 0 0;
+      }
+      .comparison {
+        overflow-x: auto;
+      }
+      @media (max-width: 780px) {
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        LAB
+        <span>/ comunicação web</span>
+      </div>
+      <nav>
+        <a href="http://localhost:3001">Chat</a>
+        <a href="http://localhost:3002">SSE</a>
+        <a href="http://localhost:3003">HLS</a>
+        <a class="active" href="/shared/guia.html">Guia</a>
+      </nav>
+    </header>
+    <main>
+      <div class="hero">
+        <span class="pill">
+          <i class="dot"></i>
+          Guia visual de aula
+        </span>
+        <h1>Três formas de comunicar na web</h1>
+        <p class="lead">
+          O que trafega, quem inicia cada conexão e o papel dos métodos mais
+          importantes no código.
+        </p>
+      </div>
+      <nav class="guide-nav" aria-label="Capítulos do guia">
+        <a href="#websocket">01 · WebSocket</a>
+        <a href="#sse">02 · MQTT + SSE</a>
+        <a href="#hls">03 · HLS</a>
+        <a href="#comparacao">Comparação</a>
+      </nav>
+
+      <section id="websocket" class="chapter">
+        <div class="chapter-head">
+          <span class="tag">01 · BIDIRECIONAL</span>
+          <h2>WebSocket: chat em tempo real</h2>
+          <p>
+            Dois painéis representam dois navegadores. Cada um abre sua própria
+            conexão persistente. Ambos podem enviar mensagens ao servidor e
+            receber mensagens dele a qualquer momento.
+          </p>
+        </div>
+        <figure class="diagram">
+          <svg
+            viewBox="0 0 900 245"
+            role="img"
+            aria-labelledby="ws-title ws-desc"
+          >
+            <title id="ws-title">Fluxo bidirecional do chat WebSocket</title>
+            <desc id="ws-desc">
+              Cliente A e Cliente B mantêm conexões WebSocket com o servidor. Os
+              dois enviam join e message; o servidor devolve presence e
+              mensagens para ambos.
+            </desc>
+            <defs>
+              <marker
+                id="arrow"
+                markerWidth="10"
+                markerHeight="10"
+                refX="8"
+                refY="3"
+                orient="auto"
+              >
+                <path d="M0,0 L0,6 L9,3 z" fill="#78dec4" />
+              </marker>
+            </defs>
+            <rect class="box" x="25" y="70" width="190" height="105" rx="13" />
+            <text class="text" x="120" y="112">Cliente A</text>
+            <text class="sub" x="120" y="139">WebSocket próprio</text>
+            <rect class="box" x="355" y="70" width="190" height="105" rx="13" />
+            <text class="text" x="450" y="112">Node + ws</text>
+            <text class="sub" x="450" y="139">broadcast</text>
+            <rect class="box" x="685" y="70" width="190" height="105" rx="13" />
+            <text class="text" x="780" y="112">Cliente B</text>
+            <text class="sub" x="780" y="139">WebSocket próprio</text>
+            <path class="line" d="M220 96 L345 96" />
+            <path class="line" d="M350 150 L225 150" />
+            <path class="line" d="M550 96 L675 96" />
+            <path class="line" d="M680 150 L555 150" />
+            <text class="label" x="285" y="80">join / message</text>
+            <text class="label" x="285" y="188">presence / message</text>
+            <text class="label" x="615" y="80">presence / message</text>
+            <text class="label" x="615" y="188">join / message</text>
+          </svg>
+          <figcaption class="legend">
+            Uma mensagem enviada por A chega ao servidor, que a distribui para A
+            e B.
+          </figcaption>
+        </figure>
+        <div class="two-col">
+          <div class="card">
+            <h2>No servidor</h2>
+            <table class="method-table">
+              <thead>
+                <tr>
+                  <th>Método ou evento</th>
+                  <th>O que faz</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>http.createServer(app)</code></td>
+                  <td>Compartilha o servidor HTTP com o WebSocket.</td>
+                </tr>
+                <tr>
+                  <td><code>new WebSocketServer(...)</code></td>
+                  <td>
+                    Atende o caminho
+                    <code>/ws</code>
+                    .
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>on("connection")</code></td>
+                  <td>Recebe um novo cliente.</td>
+                </tr>
+                <tr>
+                  <td><code>on("message")</code></td>
+                  <td>
+                    Lê os eventos
+                    <code>join</code>
+                    e
+                    <code>message</code>
+                    .
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>broadcast()</code></td>
+                  <td>Percorre as conexões abertas e envia a todos.</td>
+                </tr>
+                <tr>
+                  <td><code>on("close")</code></td>
+                  <td>Remove o cliente e atualiza a presença.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h2>No navegador</h2>
+            <table class="method-table">
+              <thead>
+                <tr>
+                  <th>Método ou evento</th>
+                  <th>O que faz</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>new WebSocket(...)</code></td>
+                  <td>Abre a conexão persistente.</td>
+                </tr>
+                <tr>
+                  <td><code>open</code></td>
+                  <td>
+                    Indica que já é possível enviar
+                    <code>join</code>
+                    .
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>send()</code></td>
+                  <td>Envia um frame ao servidor.</td>
+                </tr>
+                <tr>
+                  <td><code>message</code></td>
+                  <td>Recebe presença e mensagens de chat.</td>
+                </tr>
+                <tr>
+                  <td><code>close</code></td>
+                  <td>Mostra que a conexão terminou.</td>
+                </tr>
+                <tr>
+                  <td><code>textContent</code></td>
+                  <td>Mostra texto recebido sem interpretá-lo como HTML.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <ol class="steps">
+          <li>Entre como Ana e Beto nos dois painéis.</li>
+          <li>Envie mensagens nos dois sentidos.</li>
+          <li>
+            Abra DevTools → Network → WS →
+            <code>/ws</code>
+            e observe os frames.
+          </li>
+        </ol>
+        <a class="action-link" href="http://localhost:3001">Abrir o chat →</a>
+      </section>
+
+      <section id="sse" class="chapter">
+        <div class="chapter-head">
+          <span class="tag">02 · BROKER + FLUXO UNIDIRECIONAL</span>
+          <h2>MQTT + SSE: notificações por CPF fictício</h2>
+          <p>
+            A página de envio faz um POST ao Node. O Node publica no Mosquitto.
+            O broker entrega ao Node assinante, que filtra o CPF e escreve um
+            evento SSE para o painel.
+          </p>
+        </div>
+        <figure class="diagram">
+          <svg
+            viewBox="0 0 900 310"
+            role="img"
+            aria-labelledby="sse-title sse-desc"
+          >
+            <title id="sse-title">
+              Caminho da notificação do publicador ao painel
+            </title>
+            <desc id="sse-desc">
+              Página de envio faz POST ao Node. Node publica em MQTT no
+              Mosquitto. O Node assina os tópicos e recebe a publicação. O
+              painel recebe a notificação por SSE.
+            </desc>
+            <defs>
+              <marker
+                id="arrow2"
+                markerWidth="10"
+                markerHeight="10"
+                refX="8"
+                refY="3"
+                orient="auto"
+              >
+                <path d="M0,0 L0,6 L9,3 z" fill="#78dec4" />
+              </marker>
+            </defs>
+            <rect class="box" x="20" y="35" width="160" height="82" rx="12" />
+            <text class="text" x="100" y="70">Página de envio</text>
+            <text class="sub" x="100" y="94">navegador</text>
+            <rect class="box" x="235" y="35" width="160" height="82" rx="12" />
+            <text class="text" x="315" y="70">Node</text>
+            <text class="sub" x="315" y="94">publisher</text>
+            <rect
+              class="broker"
+              x="470"
+              y="35"
+              width="180"
+              height="82"
+              rx="12"
+            />
+            <text class="text" x="560" y="70">Mosquitto</text>
+            <text class="sub" x="560" y="94">broker MQTT</text>
+            <rect class="box" x="710" y="35" width="160" height="82" rx="12" />
+            <text class="text" x="790" y="70">Node</text>
+            <text class="sub" x="790" y="94">subscriber</text>
+            <rect class="box" x="710" y="205" width="160" height="82" rx="12" />
+            <text class="text" x="790" y="240">Painel</text>
+            <text class="sub" x="790" y="263">EventSource</text>
+            <path
+              d="M185 76 L225 76"
+              stroke="#78dec4"
+              stroke-width="2.5"
+              marker-end="url(#arrow2)"
+            />
+            <path
+              d="M400 76 L460 76"
+              stroke="#78dec4"
+              stroke-width="2.5"
+              marker-end="url(#arrow2)"
+            />
+            <path
+              d="M705 61 L655 61"
+              stroke="#c399eb"
+              stroke-width="2.5"
+              marker-end="url(#arrow2)"
+            />
+            <path
+              d="M655 94 L700 94"
+              stroke="#78dec4"
+              stroke-width="2.5"
+              marker-end="url(#arrow2)"
+            />
+            <path
+              d="M790 122 L790 195"
+              stroke="#78dec4"
+              stroke-width="2.5"
+              marker-end="url(#arrow2)"
+            />
+            <text class="label" x="208" y="55">POST</text>
+            <text class="label" x="434" y="55">PUBLISH</text>
+            <text class="label" x="680" y="25">SUBSCRIBE ←</text>
+            <text class="label" x="680" y="140">entrega →</text>
+            <text class="label" x="830" y="165">SSE</text>
+            <text class="sub" x="560" y="165">
+              lab/cpf/00000000000/notificacoes
+            </text>
+            <text class="sub" x="560" y="190">
+              Node assina: lab/cpf/+/notificacoes
+            </text>
+            <text class="sub" x="560" y="215">
+              + representa um nível, aqui o CPF
+            </text>
+          </svg>
+          <figcaption class="legend">
+            Os dois blocos “Node” são papéis do mesmo processo no exemplo. O
+            navegador não faz subscribe MQTT.
+          </figcaption>
+        </figure>
+        <div class="callout">
+          <p>
+            <strong>Não confunda as inscrições:</strong>
+            <code>broker.subscribe()</code>
+            registra tópicos no Mosquitto.
+            <code>new EventSource()</code>
+            abre uma resposta HTTP para o navegador receber eventos SSE. Trocar
+            o CPF no painel muda o filtro SSE; a assinatura MQTT do Node
+            continua igual.
+          </p>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <h2>MQTT e servidor</h2>
+            <table class="method-table">
+              <thead>
+                <tr>
+                  <th>Método</th>
+                  <th>O que faz</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>mqtt.connect()</code></td>
+                  <td>Conecta o Node ao Mosquitto.</td>
+                </tr>
+                <tr>
+                  <td><code>broker.subscribe()</code></td>
+                  <td>
+                    Assina
+                    <code>lab/metricas</code>
+                    e
+                    <code>lab/cpf/+/notificacoes</code>
+                    .
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>broker.publish()</code></td>
+                  <td>
+                    Publica JSON no tópico do CPF. A notificação usa QoS 1.
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>broker.on("message")</code></td>
+                  <td>Recebe publicações entregues pelo broker.</td>
+                </tr>
+                <tr>
+                  <td><code>response.write()</code></td>
+                  <td>
+                    Escreve
+                    <code>event:</code>
+                    e
+                    <code>data:</code>
+                    na conexão SSE aberta.
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>forwardToBrowsers()</code></td>
+                  <td>Envia a notificação somente a painéis do mesmo CPF.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h2>HTTP e navegador</h2>
+            <table class="method-table">
+              <thead>
+                <tr>
+                  <th>Método</th>
+                  <th>O que faz</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>fetch(... POST ...)</code></td>
+                  <td>A página de envio passa CPF e texto ao Node.</td>
+                </tr>
+                <tr>
+                  <td><code>app.post()</code></td>
+                  <td>Recebe o formulário e pede o publish MQTT.</td>
+                </tr>
+                <tr>
+                  <td><code>app.get("/events")</code></td>
+                  <td>Abre uma resposta HTTP contínua para o painel.</td>
+                </tr>
+                <tr>
+                  <td><code>new EventSource()</code></td>
+                  <td>Conecta o painel ao fluxo SSE e reconecta se cair.</td>
+                </tr>
+                <tr>
+                  <td><code>addEventListener("alert")</code></td>
+                  <td>Mostra a notificação recebida.</td>
+                </tr>
+                <tr>
+                  <td><code>source.close()</code></td>
+                  <td>Fecha a conexão antiga ao trocar o CPF.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <ol class="steps">
+          <li>Abra o painel e a página de envio em abas diferentes.</li>
+          <li>
+            Use o CPF fictício
+            <code>000.000.000-00</code>
+            nos dois lugares e publique uma mensagem.
+          </li>
+          <li>
+            Troque o CPF do painel e repita; o filtro impede que a mensagem
+            apareça.
+          </li>
+          <li>
+            Em Network, observe o POST na página de envio e o fluxo
+            <code>/events</code>
+            no painel.
+          </li>
+        </ol>
+        <a class="action-link" href="http://localhost:3002">Abrir o painel →</a>
+        <a class="action-link" href="http://localhost:3002/publicar.html">
+          Abrir o publicador →
+        </a>
+      </section>
+
+      <section id="hls" class="chapter">
+        <div class="chapter-head">
+          <span class="tag">03 · VÍDEO POR HTTP</span>
+          <h2>HLS: playlists, segmentos e qualidades</h2>
+          <p>
+            O FFmpeg gera um vídeo de teste em três resoluções. A playlist
+            mestre aponta para uma playlist de cada qualidade. O navegador pede
+            segmentos pequenos por HTTP e o
+            <code>hls.js</code>
+            os entrega ao elemento
+            <code>&lt;video&gt;</code>
+            .
+          </p>
+        </div>
+        <figure class="diagram">
+          <svg
+            viewBox="0 0 900 300"
+            role="img"
+            aria-labelledby="hls-title hls-desc"
+          >
+            <title id="hls-title">
+              Estrutura das playlists e segmentos HLS
+            </title>
+            <desc id="hls-desc">
+              FFmpeg gera master.m3u8, que aponta para playlists 360p, 720p e
+              1080p. Cada playlist aponta para segmentos TS. hls.js seleciona e
+              reproduz os segmentos.
+            </desc>
+            <defs>
+              <marker
+                id="arrow3"
+                markerWidth="10"
+                markerHeight="10"
+                refX="8"
+                refY="3"
+                orient="auto"
+              >
+                <path d="M0,0 L0,6 L9,3 z" fill="#78dec4" />
+              </marker>
+            </defs>
+            <rect class="box" x="20" y="105" width="140" height="80" rx="12" />
+            <text class="text" x="90" y="138">FFmpeg</text>
+            <text class="sub" x="90" y="162">gera arquivos</text>
+            <rect class="box" x="210" y="105" width="155" height="80" rx="12" />
+            <text class="text" x="287" y="138">master.m3u8</text>
+            <text class="sub" x="287" y="162">playlist mestre</text>
+            <rect class="box" x="420" y="15" width="170" height="65" rx="12" />
+            <text class="text" x="505" y="43">360p/index.m3u8</text>
+            <text class="sub" x="505" y="63">segmentos .ts</text>
+            <rect class="box" x="420" y="112" width="170" height="65" rx="12" />
+            <text class="text" x="505" y="140">720p/index.m3u8</text>
+            <text class="sub" x="505" y="160">segmentos .ts</text>
+            <rect class="box" x="420" y="209" width="170" height="65" rx="12" />
+            <text class="text" x="505" y="237">1080p/index.m3u8</text>
+            <text class="sub" x="505" y="257">segmentos .ts</text>
+            <rect class="box" x="685" y="105" width="190" height="80" rx="12" />
+            <text class="text" x="780" y="138">hls.js + &lt;video&gt;</text>
+            <text class="sub" x="780" y="162">reprodução</text>
+            <path
+              d="M165 145 L200 145"
+              stroke="#78dec4"
+              stroke-width="2.5"
+              marker-end="url(#arrow3)"
+            />
+            <path
+              d="M370 135 L410 50"
+              stroke="#78dec4"
+              stroke-width="2.5"
+              marker-end="url(#arrow3)"
+            />
+            <path
+              d="M370 145 L410 145"
+              stroke="#78dec4"
+              stroke-width="2.5"
+              marker-end="url(#arrow3)"
+            />
+            <path
+              d="M370 155 L410 240"
+              stroke="#78dec4"
+              stroke-width="2.5"
+              marker-end="url(#arrow3)"
+            />
+            <path
+              d="M595 47 L675 135"
+              stroke="#78dec4"
+              stroke-width="2.5"
+              marker-end="url(#arrow3)"
+            />
+            <path
+              d="M595 145 L675 145"
+              stroke="#78dec4"
+              stroke-width="2.5"
+              marker-end="url(#arrow3)"
+            />
+            <path
+              d="M595 242 L675 155"
+              stroke="#78dec4"
+              stroke-width="2.5"
+              marker-end="url(#arrow3)"
+            />
+          </svg>
+          <figcaption class="legend">
+            O player escolhe uma variante de cada vez; ao mudar a qualidade,
+            passa a pedir segmentos de outra playlist.
+          </figcaption>
+        </figure>
+        <div class="two-col">
+          <div class="card">
+            <h2>Geração e servidor</h2>
+            <table class="method-table">
+              <thead>
+                <tr>
+                  <th>Método ou opção</th>
+                  <th>O que faz</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>spawnSync("ffmpeg", args)</code></td>
+                  <td>Gera o vídeo e espera o processo terminar.</td>
+                </tr>
+                <tr>
+                  <td>
+                    <code>testsrc2</code>
+                    /
+                    <code>sine</code>
+                  </td>
+                  <td>Produzem imagem e som sintéticos.</td>
+                </tr>
+                <tr>
+                  <td><code>-hls_time 2</code></td>
+                  <td>Solicita segmentos de cerca de dois segundos.</td>
+                </tr>
+                <tr>
+                  <td><code>fs.writeFileSync()</code></td>
+                  <td>Cria a playlist mestre com as três variantes.</td>
+                </tr>
+                <tr>
+                  <td><code>express.static()</code></td>
+                  <td>Entrega playlists e segmentos por HTTP.</td>
+                </tr>
+                <tr>
+                  <td><code>res.type()</code></td>
+                  <td>Informa o tipo MIME de playlists e segmentos.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h2>No navegador</h2>
+            <table class="method-table">
+              <thead>
+                <tr>
+                  <th>Método ou evento</th>
+                  <th>O que faz</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>Hls.isSupported()</code></td>
+                  <td>
+                    Verifica suporte à reprodução via Media Source Extensions.
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>hls.loadSource()</code></td>
+                  <td>Carrega a playlist mestre.</td>
+                </tr>
+                <tr>
+                  <td><code>hls.attachMedia(video)</code></td>
+                  <td>Liga o player ao elemento de vídeo.</td>
+                </tr>
+                <tr>
+                  <td><code>MANIFEST_PARSED</code></td>
+                  <td>Lista as qualidades disponíveis.</td>
+                </tr>
+                <tr>
+                  <td><code>LEVEL_SWITCHED</code></td>
+                  <td>Informa a qualidade ativa.</td>
+                </tr>
+                <tr>
+                  <td>
+                    <code>startLevel</code>
+                    /
+                    <code>currentLevel</code>
+                  </td>
+                  <td>Escolhem qualidade antes e durante a reprodução.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <ol class="steps">
+          <li>Reproduza o vídeo de teste.</li>
+          <li>
+            Em Network, filtre por
+            <code>m3u8</code>
+            e
+            <code>ts</code>
+            .
+          </li>
+          <li>Alterne entre 360p, 720p, 1080p e Automática.</li>
+        </ol>
+        <a class="action-link" href="http://localhost:3003">Abrir o player →</a>
+      </section>
+
+      <section id="comparacao" class="chapter card">
+        <h2>Compare os três projetos</h2>
+        <div class="comparison">
+          <table class="method-table">
+            <thead>
+              <tr>
+                <th>Pergunta</th>
+                <th>WebSocket</th>
+                <th>MQTT + SSE</th>
+                <th>HLS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>O navegador usa</td>
+                <td><code>WebSocket</code></td>
+                <td><code>EventSource</code></td>
+                <td>
+                  <code>hls.js</code>
+                  e
+                  <code>&lt;video&gt;</code>
+                </td>
+              </tr>
+              <tr>
+                <td>O fluxo é</td>
+                <td>Nos dois sentidos</td>
+                <td>Servidor → navegador; MQTT entre serviços</td>
+                <td>Arquivos HTTP para o player</td>
+              </tr>
+              <tr>
+                <td>Conexão com navegador</td>
+                <td>Persistente</td>
+                <td>Resposta HTTP persistente</td>
+                <td>Requisições por playlist e segmento</td>
+              </tr>
+              <tr>
+                <td>Experimento</td>
+                <td>Chat</td>
+                <td>Notificações por CPF fictício</td>
+                <td>Vídeo adaptativo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted">
+          Use apenas CPFs fictícios no exemplo. Ele não implementa autenticação
+          nem armazenamento de notificações.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

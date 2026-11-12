@@ -46,4 +46,3 @@ Para explicar `publish`, `subscribe`, tópicos, o curinga `+` e a ponte MQTT →
 O Mosquitto fica disponível para ferramentas locais em `127.0.0.1:1883` e para os contêineres em `mosquitto:1883`. Os tópicos são `lab/metricas` e `lab/cpf/{cpf}/notificacoes`. Use apenas CPFs fictícios nesta demonstração: o projeto não implementa autenticação ou proteção de dados pessoais.
 
 O vídeo de teste dura 24 segundos, usa imagem sintética e tom de áudio, e se repete em loop. Clique em **Reproduzir vídeo** para iniciar; ele começa mudo e pode ser desmutado no controle nativo. A seleção automática depende das condições percebidas pelo `hls.js`; em rede local rápida, normalmente ele escolhe a melhor resolução.
-

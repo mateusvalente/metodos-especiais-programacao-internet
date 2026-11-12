@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Publicar notificações • Laboratório de Comunicação</title>
+    <link rel="stylesheet" href="/shared/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        LAB
+        <span>/ comunicação web</span>
+      </div>
+      <nav>
+        <a href="http://localhost:3001">WebSocket</a>
+        <a class="active" href="http://localhost:3002">SSE</a>
+        <a href="http://localhost:3003">HLS</a>
+        <a href="/shared/guia.html">Guia</a>
+      </nav>
+    </header>
+    <main>
+      <span class="pill">
+        <i class="dot"></i>
+        Simulador MQTT
+      </span>
+      <h1>Enviar notificações</h1>
+      <p class="lead">
+        Esta página simula uma origem de eventos. Envie uma mensagem para um CPF
+        fictício e veja o painel recebê-la por SSE após passar pelo Mosquitto.
+      </p>
+      <div class="grid">
+        <section class="card">
+          <h2>Nova notificação</h2>
+          <form id="publisher-form" class="stack">
+            <label for="cpf">CPF fictício</label>
+            <input id="cpf" name="cpf" value="000.000.000-00" required />
+            <label for="kind">Tipo</label>
+            <select id="kind" name="kind">
+              <option value="info">Informação</option>
+              <option value="warning">Atenção</option>
+              <option value="critical">Crítico</option>
+            </select>
+            <label for="message">Mensagem</label>
+            <input
+              id="message"
+              name="message"
+              maxlength="120"
+              placeholder="Digite sua notificação"
+              required
+            />
+            <button>Publicar no Mosquitto</button>
+          </form>
+          <p id="publish-status" class="small" role="status"></p>
+        </section>
+        <aside class="card">
+          <h2>Eventos de exemplo</h2>
+          <p>Use o CPF do formulário e gere uma mensagem pronta:</p>
+          <div class="stack">
+            <button
+              type="button"
+              class="example"
+              data-kind="info"
+              data-message="Cadastro recebido para análise."
+            >
+              Cadastro recebido
+            </button>
+            <button
+              type="button"
+              class="example"
+              data-kind="warning"
+              data-message="Documento pendente de conferência."
+            >
+              Documento pendente
+            </button>
+            <button
+              type="button"
+              class="example"
+              data-kind="critical"
+              data-message="Solicitação requer atenção."
+            >
+              Atenção necessária
+            </button>
+          </div>
+          <p>
+            <a href="/" target="_blank" rel="noopener">
+              Abrir painel de recebimento →
+            </a>
+          </p>
+        </aside>
+      </div>
+      <section class="card lesson-card">
+        <h2>O que este botão faz?</h2>
+        <ol class="flow-steps">
+          <li>
+            <strong>1. Navegador</strong>
+            <span>
+              Envia um
+              <code>POST /api/notifications</code>
+              para o Node. Esta página não é um cliente MQTT.
+            </span>
+          </li>
+          <li>
+            <strong>2. Node</strong>
+            <span>
+              Transforma o CPF em tópico e chama
+              <code>broker.publish(...)</code>
+              .
+            </span>
+          </li>
+          <li>
+            <strong>3. Mosquitto</strong>
+            <span>
+              Entrega a publicação aos clientes que fizeram
+              <code>subscribe</code>
+              .
+            </span>
+          </li>
+          <li>
+            <strong>4. Painel</strong>
+            <span>Recebe um evento SSE somente se acompanhar o mesmo CPF.</span>
+          </li>
+        </ol>
+        <p class="small muted">
+          Tópico da próxima publicação:
+          <code id="publish-topic">lab/cpf/00000000000/notificacoes</code>
+        </p>
+      </section>
+      <p class="note">
+        Fluxo: formulário → POST no Node → tópico
+        <code>lab/cpf/{cpf}/notificacoes</code>
+        → Mosquitto → Node → SSE → painel.
+      </p>
+    </main>
+    <script src="/publicar.js"></script>
+  </body>
+</html>

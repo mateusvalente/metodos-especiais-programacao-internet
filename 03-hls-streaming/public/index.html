@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Streaming HLS • Laboratório de Comunicação</title>
+    <link rel="stylesheet" href="/shared/style.css" />
+  </head>
+  <body>
+    <!-- Navegação igual nos três projetos para facilitar a comparação. -->
+    <header>
+      <div class="brand">
+        LAB
+        <span>/ comunicação web</span>
+      </div>
+      <nav>
+        <a href="http://localhost:3001">WebSocket</a>
+        <a href="http://localhost:3002">SSE</a>
+        <a class="active" href="http://localhost:3003">HLS</a>
+        <a href="/shared/guia.html">Guia</a>
+      </nav>
+    </header>
+    <main>
+      <span class="pill">
+        <i class="dot"></i>
+        03 / HTTP Live Streaming
+      </span>
+      <h1>Vídeo adaptativo</h1>
+      <p class="lead">
+        Um vídeo de teste é gerado pelo FFmpeg em três resoluções. Clique em
+        Reproduzir e alterne entre a seleção automática e manual.
+      </p>
+      <!-- O elemento video recebe os segmentos por meio do hls.js. -->
+      <div class="grid">
+        <section class="card">
+          <video
+            id="video"
+            controls
+            muted
+            loop
+            playsinline
+            aria-label="Vídeo de exemplo HLS"
+          ></video>
+          <div class="row" style="margin-top: 16px">
+            <button id="play-button" type="button" disabled>
+              Reproduzir vídeo
+            </button>
+            <span class="small muted">
+              O vídeo começa sem áudio; use o controle do player para ativá-lo.
+            </span>
+          </div>
+          <div class="row" style="margin-top: 16px">
+            <label for="quality">Qualidade</label>
+            <select id="quality">
+              <option value="-1">Automática</option>
+            </select>
+          </div>
+          <p class="small muted" id="player-status">Preparando player…</p>
+        </section>
+        <aside class="card">
+          <h2>Informações da reprodução</h2>
+          <ul class="list">
+            <li>
+              Qualidade atual:
+              <strong id="current-quality">—</strong>
+            </li>
+            <li>
+              Modo:
+              <strong id="mode">Automático</strong>
+            </li>
+            <li>Resoluções: 360p, 720p, 1080p</li>
+            <li>Formato: playlists .m3u8 e segmentos .ts</li>
+            <li>
+              Tempo:
+              <strong id="playback-time">00:00 / 00:24</strong>
+              <progress
+                id="playback-progress"
+                max="24"
+                value="0"
+                style="width: 100%; margin-top: 10px"
+              ></progress>
+            </li>
+          </ul>
+        </aside>
+      </div>
+      <p class="note">
+        No DevTools → Network, filtre por
+        <code>m3u8</code>
+        e
+        <code>ts</code>
+        . A playlist mestre lista as qualidades; cada playlist de variante
+        aponta para pequenos segmentos de vídeo.
+      </p>
+    </main>
+    <script src="/vendor/hls.min.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

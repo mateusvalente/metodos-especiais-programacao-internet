@@ -1,0 +1,12 @@
+{
+  "name": "hls-streaming",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node generate.js && node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "hls.js": "^1.5.20"
+  }
+}

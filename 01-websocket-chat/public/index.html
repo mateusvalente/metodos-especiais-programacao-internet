@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Chat • Laboratório de Comunicação</title>
+    <link rel="stylesheet" href="/shared/style.css" />
+    <style>
+      .twins {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .chat .messages {
+        height: 330px;
+      }
+      .chat .row input {
+        width: 1px;
+      }
+      @media (max-width: 750px) {
+        .twins {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navegação igual nos três projetos para facilitar a comparação. -->
+    <header>
+      <div class="brand">
+        LAB
+        <span>/ comunicação web</span>
+      </div>
+      <nav>
+        <a class="active" href="http://localhost:3001">WebSocket</a>
+        <a href="http://localhost:3002">SSE</a>
+        <a href="http://localhost:3003">HLS</a>
+        <a href="/shared/guia.html">Guia</a>
+      </nav>
+    </header>
+    <main>
+      <span class="pill">
+        <i class="dot"></i>
+        01 / WebSocket
+      </span>
+      <h1>Chat em tempo real</h1>
+      <p class="lead">
+        Dois clientes independentes na mesma página. Digite nomes diferentes e
+        veja as mensagens aparecerem imediatamente nos dois lados.
+      </p>
+      <!-- Cada seção recebe uma conexão WebSocket independente em app.js. -->
+      <div class="twins">
+        <section class="card chat" id="chat-a">
+          <h2>
+            Cliente A
+            <span class="pill status">Desconectado</span>
+          </h2>
+          <form class="row join">
+            <input name="name" placeholder="Seu nome" maxlength="24" required />
+            <button>Entrar</button>
+          </form>
+          <div class="messages" aria-live="polite"></div>
+          <form class="row send">
+            <input
+              name="message"
+              placeholder="Escreva uma mensagem"
+              maxlength="500"
+              required
+              disabled
+            />
+            <button disabled>Enviar</button>
+          </form>
+          <p class="small muted users">Conectados: ninguém</p>
+        </section>
+        <section class="card chat" id="chat-b">
+          <h2>
+            Cliente B
+            <span class="pill status">Desconectado</span>
+          </h2>
+          <form class="row join">
+            <input name="name" placeholder="Seu nome" maxlength="24" required />
+            <button>Entrar</button>
+          </form>
+          <div class="messages" aria-live="polite"></div>
+          <form class="row send">
+            <input
+              name="message"
+              placeholder="Escreva uma mensagem"
+              maxlength="500"
+              required
+              disabled
+            />
+            <button disabled>Enviar</button>
+          </form>
+          <p class="small muted users">Conectados: ninguém</p>
+        </section>
+      </div>
+      <p class="note">
+        No DevTools → Network → WS, observe o handshake e os frames de
+        <code>join</code>
+        ,
+        <code>message</code>
+        e
+        <code>presence</code>
+        .
+      </p>
+      <p class="footer">
+        Dica: abra esta página em outra aba para adicionar mais clientes.
+      </p>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>

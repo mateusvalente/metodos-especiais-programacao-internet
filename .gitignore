@@ -1,0 +1,7 @@
+**/node_modules/
+03-hls-streaming/videos/
+playwright-report/
+test-results/
+node_modules/
+.npm-cache/
+.docker-local/

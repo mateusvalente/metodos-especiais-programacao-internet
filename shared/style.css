@@ -1,0 +1,297 @@
+/* Base visual compartilhada pelas três demonstrações. */
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, Arial, sans-serif;
+  color: #e9f2ff;
+  background: #0a1220;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 80% 0, #183451 0, transparent 40%), #0a1220;
+}
+header {
+  border-bottom: 1px solid #294158;
+  background: #0d1b2dcc;
+  padding: 18px max(24px, calc((100vw - 1100px) / 2));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.brand {
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #6de0c1;
+}
+.brand span {
+  color: #e9f2ff;
+}
+nav {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+a {
+  color: #9eb4ce;
+  text-decoration: none;
+}
+a:hover,
+.active {
+  color: #6de0c1;
+}
+main {
+  max-width: 1100px;
+  margin: 48px auto;
+  padding: 0 24px;
+}
+h1 {
+  font-size: clamp(30px, 5vw, 46px);
+  margin: 0 0 10px;
+}
+p {
+  color: #a9bdd3;
+  line-height: 1.55;
+}
+.lead {
+  font-size: 18px;
+  margin: 0 0 30px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
+  gap: 22px;
+}
+.card {
+  background: #112238;
+  border: 1px solid #2c4560;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 18px 40px #0002;
+}
+.card h2 {
+  font-size: 18px;
+  margin: 0 0 18px;
+}
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+input,
+button,
+select {
+  font: inherit;
+  border-radius: 8px;
+  padding: 11px 13px;
+}
+input,
+select {
+  background: #0b192b;
+  border: 1px solid #3b5671;
+  color: #fff;
+  min-width: 0;
+}
+input {
+  flex: 1;
+}
+button {
+  border: 0;
+  background: #50d4ad;
+  color: #06241f;
+  font-weight: 800;
+  cursor: pointer;
+}
+button:hover {
+  background: #7ae8c8;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px;
+  border-radius: 99px;
+  background: #193447;
+  color: #79e4cb;
+  font-size: 13px;
+  font-weight: 700;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #56dfb5;
+}
+.muted {
+  color: #9eb4ce;
+}
+.small {
+  font-size: 13px;
+}
+.stack {
+  display: grid;
+  gap: 14px;
+}
+/* Cartões de métricas usados na demonstração SSE. */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.metric {
+  padding: 16px;
+  background: #0b192b;
+  border: 1px solid #304a65;
+  border-radius: 12px;
+}
+.metric strong {
+  display: block;
+  font-size: 30px;
+  color: #fff;
+  margin-top: 6px;
+}
+.metric span {
+  color: #a9bdd3;
+  font-size: 13px;
+}
+.bar {
+  height: 7px;
+  background: #26405a;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+.bar i {
+  display: block;
+  height: 100%;
+  background: #50d4ad;
+  width: 0;
+  transition: width 0.4s;
+}
+.list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.list li {
+  padding: 10px 0;
+  border-bottom: 1px solid #294158;
+}
+/* Bolhas de mensagem usadas no chat WebSocket. */
+.messages {
+  height: 370px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.message {
+  background: #193047;
+  border-radius: 10px;
+  padding: 10px 13px;
+  max-width: 85%;
+  align-self: flex-start;
+  overflow-wrap: anywhere;
+}
+.message.mine {
+  align-self: flex-end;
+  background: #205948;
+}
+.message b {
+  color: #baf5e5;
+}
+.message time {
+  float: right;
+  color: #a9bdd3;
+  font-size: 11px;
+  margin-left: 12px;
+}
+.message p {
+  margin: 5px 0 0;
+  color: #f0f7ff;
+}
+.note {
+  border-left: 3px solid #50d4ad;
+  padding: 10px 16px;
+  background: #102b39;
+  border-radius: 0 8px 8px 0;
+}
+.lesson-card {
+  margin-top: 22px;
+}
+.flow-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0;
+  list-style: none;
+}
+.flow-steps li {
+  padding: 14px;
+  border: 1px solid #304a65;
+  border-radius: 10px;
+  background: #0b192b;
+}
+.flow-steps strong,
+.flow-steps span {
+  display: block;
+}
+.flow-steps strong {
+  color: #79e4cb;
+  margin-bottom: 8px;
+}
+.flow-steps span {
+  color: #a9bdd3;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.flow-steps code {
+  overflow-wrap: anywhere;
+}
+.note code {
+  color: #92f4d6;
+}
+/* O player conserva a proporção do vídeo gerado pelo FFmpeg. */
+video {
+  width: 100%;
+  background: #000;
+  border-radius: 10px;
+  aspect-ratio: 16/9;
+}
+.footer {
+  margin-top: 28px;
+  color: #7892ac;
+  font-size: 13px;
+}
+/* Em telas estreitas, os painéis passam a ocupar uma coluna. */
+@media (max-width: 700px) {
+  .flow-steps {
+    grid-template-columns: 1fr;
+  }
+  header {
+    display: block;
+  }
+  nav {
+    margin-top: 12px;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+  main {
+    margin: 30px auto;
+  }
+  .row {
+    flex-wrap: wrap;
+  }
+}

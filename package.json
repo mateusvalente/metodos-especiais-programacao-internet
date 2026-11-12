@@ -1,0 +1,17 @@
+{
+  "name": "exemplos-metodos-especiais",
+  "version": "1.0.0",
+  "description": "Três exemplos independentes em Node.js, Express e JavaScript puro, com interface visual semelhante.",
+  "scripts": {
+    "test": "playwright test",
+    "format": "prettier --write \"**/*.{js,css,html,json}\" --ignore-path .gitignore",
+    "format:check": "prettier --check \"**/*.{js,css,html,json}\" --ignore-path .gitignore"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "prettier": "^3.10.1"
+  }
+}

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Monitoramento • Laboratório de Comunicação</title>
+    <link rel="stylesheet" href="/shared/style.css" />
+  </head>
+  <body>
+    <!-- Navegação igual nos três projetos para facilitar a comparação. -->
+    <header>
+      <div class="brand">
+        LAB
+        <span>/ comunicação web</span>
+      </div>
+      <nav>
+        <a href="http://localhost:3001">WebSocket</a>
+        <a class="active" href="http://localhost:3002">SSE</a>
+        <a href="http://localhost:3003">HLS</a>
+        <a href="/shared/guia.html">Guia</a>
+      </nav>
+    </header>
+    <main>
+      <span class="pill">
+        <i class="dot"></i>
+        02 / Server-Sent Events
+      </span>
+      <h1>Monitoramento ao vivo</h1>
+      <p class="lead">
+        Métricas e notificações passam pelo Mosquitto antes de chegar a esta
+        página por SSE. Escolha um CPF fictício para acompanhar.
+      </p>
+      <section class="card" style="margin-bottom: 20px">
+        <h2>CPF acompanhado</h2>
+        <form id="cpf-form" class="row">
+          <input
+            name="cpf"
+            aria-label="CPF acompanhado"
+            value="000.000.000-00"
+            placeholder="000.000.000-00"
+            required
+          />
+          <button>Acompanhar</button>
+        </form>
+        <p class="small muted" id="cpf-label">Acompanhando 000.000.000-00</p>
+        <a href="/publicar.html">Abrir página que envia notificações →</a>
+      </section>
+      <!-- A coluna principal mostra métricas; a lateral mostra notificações do CPF. -->
+      <div class="grid">
+        <div class="stack">
+          <section class="card">
+            <div class="row" style="justify-content: space-between">
+              <h2>Indicadores do servidor</h2>
+              <span class="pill" id="status">Conectando…</span>
+            </div>
+            <div class="metrics">
+              <div class="metric">
+                <span>Temperatura</span>
+                <strong id="temperature">—</strong>
+                <div class="bar"><i id="temperature-bar"></i></div>
+              </div>
+              <div class="metric">
+                <span>CPU</span>
+                <strong id="cpu">—</strong>
+                <div class="bar"><i id="cpu-bar"></i></div>
+              </div>
+              <div class="metric">
+                <span>Memória</span>
+                <strong id="memory">—</strong>
+                <div class="bar"><i id="memory-bar"></i></div>
+              </div>
+            </div>
+          </section>
+          <section class="card">
+            <h2>Últimas medições</h2>
+            <ul class="list" id="history" aria-live="polite"></ul>
+          </section>
+        </div>
+        <div class="stack">
+          <section class="card">
+            <h2>Notificações do CPF</h2>
+            <ul class="list" id="alerts" aria-live="polite">
+              <li class="muted">Aguardando notificações…</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+      <section class="card lesson-card">
+        <h2>O caminho de uma notificação</h2>
+        <ol class="flow-steps">
+          <li>
+            <strong>1. HTTP POST</strong>
+            <span>A página de envio entrega CPF e mensagem ao Node.</span>
+          </li>
+          <li>
+            <strong>2. PUBLISH</strong>
+            <span>
+              O Node publica no tópico
+              <code>lab/cpf/00000000000/notificacoes</code>
+              .
+            </span>
+          </li>
+          <li>
+            <strong>3. Mosquitto</strong>
+            <span>
+              O broker distribui a mensagem para quem assinou o tópico.
+            </span>
+          </li>
+          <li>
+            <strong>4. SUBSCRIBE</strong>
+            <span>
+              O Node assina
+              <code>lab/cpf/+/notificacoes</code>
+              ;
+              <code>+</code>
+              aceita um CPF por vez.
+            </span>
+          </li>
+          <li>
+            <strong>5. SSE</strong>
+            <span>
+              O Node filtra pelo CPF acompanhado e escreve um evento
+              <code>alert</code>
+              na conexão HTTP aberta.
+            </span>
+          </li>
+        </ol>
+        <p class="small muted">
+          Último tópico recebido nesta página:
+          <code id="last-topic">aguardando</code>
+        </p>
+        <p class="small muted">
+          Ao trocar o CPF, o navegador abre outro
+          <code>EventSource</code>
+          . O
+          <code>SUBSCRIBE</code>
+          MQTT do Node continua o mesmo.
+        </p>
+      </section>
+      <p class="note">
+        No DevTools → Network, observe a requisição
+        <code>/events</code>
+        aberta e os eventos
+        <code>reading</code>
+        e
+        <code>alert</code>
+        . O envio acontece em outra página, via HTTP → MQTT → Mosquitto → Node →
+        SSE.
+      </p>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
